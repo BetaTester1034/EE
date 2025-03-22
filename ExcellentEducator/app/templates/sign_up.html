@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}Student Registration{% endblock %}
+{% block content %}
+<div class="container mx-auto px-6 py-12">
+    <div class="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-300 dark:border-gray-700">
+        <h2 class="text-3xl font-semibold text-gray-800 dark:text-white mb-6 text-center">Student Registration</h2>
+        <form action="#" method="POST" class="space-y-5">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                <!-- Name -->
+                <div class="col-span-1">
+                    <label for="fullName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" required class="w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white placeholder-gray-400" placeholder="Enter your full name">
+                </div>
+
+                <!-- Date of Birth -->
+                <div class="col-span-1">
+                    <label for="dob" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Date of Birth</label>
+                    <input type="date" id="dob" name="dob" required class="w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                <!-- Guardian Email -->
+                <div class="col-span-1">
+                    <label for="guardianEmail" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Guardian Email</label>
+                    <input type="email" id="guardianEmail" name="guardianEmail" required class="w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white placeholder-gray-400" placeholder="Enter guardian's email address">
+                </div>
+
+                <!-- Guardian Phone No. -->
+                <div class="col-span-1">
+                    <label for="guardianPhone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Guardian Phone No.</label>
+                    <input type="tel" id="guardianPhone" name="guardianPhone" required class="w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white placeholder-gray-400" placeholder="Enter guardian's phone number">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                <!-- Nationality -->
+                <div class="col-span-1">
+                    <label for="nationality" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nationality</label>
+                    <select id="nationality" name="nationality" required class="w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        {% for country in countries %}
+                            <option value="{{ country.name }}">{{ country.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Address -->
+                 <div class="col-span-1">
+                    <label for="address" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Address</label>
+                    <textarea id="address" name="address" required class="w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white h-32 resize-y"></textarea>
+                </div>
+
+                <!-- Country of Residence -->
+                <div class="col-span-1">
+                    <label for="countryOfResidence" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Country of Residence</label>
+                    <select id="countryOfResidence" name="countryOfResidence" required class="w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                        {% for country in countries %}
+                            <option value="{{ country.name }}">{{ country.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                <!-- City of Residence -->
+                <div class="col-span-1">
+                    <label for="city" class="block text-sm font-medium text-gray-700 dark:text-gray-300">City of Residence</label>
+                    <input type="text" id="city" name="city" required class="w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white placeholder-gray-400" placeholder="Enter your city of residence">
+                </div>
+                
+                <!-- Grade -->
+                <div class="col-span-1">
+                    <label for="grade" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Grade/Year</label>
+                    <input type="number" id="grade" name="grade" required class="w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white placeholder-gray-400" placeholder="Enter your grade or year">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-5">
+                <!-- Password -->
+                <div class="col-span-1">
+                    <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+                    <input type="password" id="password" name="password" required class="w-full px-5 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white placeholder-gray-400" placeholder="Enter your password">
+                </div>
+            </div>
+
+            <div class="mt-6">
+                <div class="g-recaptcha" data-sitekey="{{ RECAPTCHA_PUBLIC_KEY }}"></div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="mt-6">
+                <input type="submit" value="Create Account" class="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-blue-700 dark:hover:bg-blue-800">
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

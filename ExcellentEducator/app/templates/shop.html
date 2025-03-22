@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Shop - Academic Resources{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-16 px-6 sm:px-12">
+    <div class="text-center mb-12">
+        <h1 class="text-5xl font-extrabold text-gray-900 leading-tight">🛍 Dr. Fox's Academic Store</h1>
+        <p class="text-lg text-gray-600 mt-4">Discover a wide range of academic resources to boost your knowledge!</p>
+    </div>
+
+    {% if user.rank == 1 %}
+    <div class="flex justify-center mb-10">
+        <a href="/admin/add-item" class="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-blue-700 transition-all text-lg">➕ Add New Resource</a>
+    </div>
+    {% endif %}
+
+    {% if recommended_items %}
+    <div class="mb-16">
+        <h2 class="text-3xl font-semibold text-indigo-600 mb-6">Recommended for You</h2>
+        <p class="text-lg text-gray-600 mb-8">Here are some resources we think you might love based on your preferences and past activities.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+            {% for item in recommended_items %}
+            <div class="bg-white shadow-md rounded-xl hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                <div class="p-6 border-b border-gray-200">
+                    <h3 class="text-2xl font-semibold text-gray-800">{{ item.item_name }}</h3>
+                    <p class="text-gray-600 mt-2">{{ item.item_description }}</p>
+                    <p class="text-gray-600 mt-2">Category: {{ item.item_category }}</p>
+                    {% if item.item_is_premium == "on" or user.has_premium %}
+                        <p class="text-lg font-medium text-gray-900 mt-4 line-through">Price: ${{ item.item_price }}</p>
+                        <span class="bg-green-500 text-white text-sm font-semibold px-3 py-1 rounded-lg">Free</span>
+                    {% else %}
+                        <p class="text-lg font-medium text-gray-900 mt-4">Price: ${{ item.item_price }}</p>
+                    {% endif %}
+                </div>
+                <div class="p-6 flex justify-between items-center bg-gray-50 border-t border-gray-200">
+                    <a href="/buy_shop_item/{{ item.id }}" class="text-indigo-500 hover:text-indigo-700 font-semibold py-2 px-4 bg-green-600 hover:bg-green-500 text-white rounded-lg transition-all">Buy Now</a>
+                    {% if user.rank == 1 %}
+                    <div class="flex space-x-4">
+                        <a href="/admin/edit_product/{{ item.id }}?from_page=shop" class="text-yellow-500 hover:text-yellow-700 font-semibold">Edit</a>
+                        <a href="/admin/delete-product/{{ item.id }}?from_page=shop" class="text-red-500 hover:text-red-700 font-semibold">Delete</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if is_premium %}
+    {% if premium_items_exist %}
+    <div class="mb-16">
+        <h2 class="text-3xl font-semibold text-yellow-500 mb-6">🏆 PREMIUM EXCLUSIVE</h2>
+        <p class="text-lg text-gray-600 mb-8">Special resources exclusively available for premium users.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+            {% for item in items %}
+            {% if item.item_is_premium == "on" %}
+            <div class="bg-white shadow-md rounded-xl hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                <div class="p-6 border-b border-gray-200">
+                    <h3 class="text-2xl font-semibold text-gray-800">{{ item.item_name }}</h3>
+                    <p class="text-gray-600 mt-2">{{ item.item_description }}</p>
+                    <p class="text-gray-600 mt-2">Category: {{ item.item_category }}</p>
+                    <p class="text-lg font-medium text-gray-900 mt-4 line-through">Price: ${{ item.item_price }}</p>
+                    <span class="bg-green-500 text-white text-sm font-semibold px-3 py-1 rounded-lg">Free</span>
+                </div>
+                <div class="p-6 flex justify-between items-center bg-gray-50 border-t border-gray-200">
+                    <a href="/buy_shop_item/{{ item.id }}" class="text-indigo-500 hover:text-indigo-700 font-semibold py-2 px-4 bg-green-600 hover:bg-green-500 text-white rounded-lg transition-all">Buy Now</a>
+                    {% if user.rank == 1 %}
+                    <div class="flex space-x-4">
+                        <a href="/admin/edit_product/{{ item.id }}?from_page=shop" class="text-yellow-500 hover:text-yellow-700 font-semibold">Edit</a>
+                        <a href="/admin/delete-product/{{ item.id }}?from_page=shop" class="text-red-500 hover:text-red-700 font-semibold">Delete</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+        {% for item in items %}
+        <div class="bg-white shadow-md rounded-xl hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-2xl font-semibold text-gray-800">{{ item.item_name }}</h3>
+                <p class="text-gray-600 mt-2">{{ item.item_description }}</p>
+                <p class="text-gray-600 mt-2">Category: {{ item.item_category }}</p>
+                {% if item.item_is_premium == "on" or user.has_premium %}
+                    <p class="text-lg font-medium text-gray-900 mt-4 line-through">Price: ${{ item.item_price }}</p>
+                    <span class="bg-green-500 text-white text-sm font-semibold px-3 py-1 rounded-lg">Free</span>
+                {% else %}
+                    <p class="text-lg font-medium text-gray-900 mt-4">Price: ${{ item.item_price }}</p>
+                {% endif %}
+            </div>
+            <div class="p-6 flex justify-between items-center bg-gray-50 border-t border-gray-200">
+                <a href="/buy_shop_item/{{ item.id }}" class="text-indigo-500 hover:text-indigo-700 font-semibold py-2 px-4 bg-green-600 hover:bg-green-500 text-white rounded-lg transition-all">Buy Now</a>
+                {% if user.rank == 1 %}
+                <div class="flex space-x-4">
+                    <a href="/admin/edit_product/{{ item.id }}?from_page=shop" class="text-yellow-500 hover:text-yellow-700 font-semibold">Edit</a>
+                    <a href="/admin/delete-product/{{ item.id }}?from_page=shop" class="text-red-500 hover:text-red-700 font-semibold">Delete</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

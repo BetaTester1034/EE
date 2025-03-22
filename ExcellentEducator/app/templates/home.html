@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white flex flex-col items-center py-10 px-4">
+    <!-- User Profile Card -->
+    <div class="bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-2xl w-full max-w-md text-center border border-white/20">
+        <div class="flex justify-center">
+            <img src="/profile-picture/{{ user.id }}" 
+                 alt="Profile Picture" 
+                 class="w-32 h-32 rounded-full border-4 border-indigo-400 shadow-lg">
+        </div>
+        <h1 class="text-3xl font-bold mt-4">{{ user.full_name }}</h1>
+        <p class="text-sm text-gray-300">{% if user.rank == 0 %}Student{% else %}Teacher{% endif %}</p>
+
+        <!-- Admin Controls -->
+        {% if user.rank == 1 %}
+        <div class="mt-6 flex flex-col space-y-3">
+            <a href="/admin/new-post" class="px-6 py-3 bg-blue-600 hover:bg-blue-500 transition rounded-lg shadow-lg">Add Post</a>
+            <a href="/admin/dashboard" class="px-6 py-3 bg-purple-600 hover:bg-purple-500 transition rounded-lg shadow-lg">Admin Dashboard</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Posts Section -->
+    <div class="mt-10 w-full max-w-3xl space-y-6">
+        {% for post in posts %}
+        <div class="bg-gray-800/50 backdrop-blur-lg p-6 rounded-2xl shadow-xl border border-white/20">
+            <!-- Post Header -->
+            <div class="flex items-center gap-4 mb-4">
+                <img src="{% url 'profile_picture' post.author_id %}" alt="User" class="w-12 h-12 rounded-full border-2 border-indigo-400">
+                <div>
+                    <h2 class="font-semibold text-lg">{{ post.author_name }}</h2>
+                    <p class="text-sm text-gray-400">{{ post.post_date }} • Grade {{ post.post_for }}</p>
+                </div>
+            </div>
+
+            <!-- Post Content -->
+            <div class="p-4 border border-gray-700 rounded-lg bg-gray-900 text-gray-300">
+                <p>{{ post.post_content }}</p>
+            </div>
+
+            <!-- Buttons -->
+            <div class="mt-4 flex flex-wrap gap-3 items-center">
+                {% if post.post_type == "Question" %}
+                {% if user.grade == post.post_for or user.rank == 1 %}
+                <a href="/reply-post/{{ post.id }}" class="px-4 py-2 bg-green-500 hover:bg-green-400 transition rounded-lg shadow">Reply</a>
+                {% else %}
+                <span class="px-4 py-2 bg-gray-500 text-gray-300 rounded-lg shadow">Reply</span>
+                {% endif %}
+                {% endif %}
+                {% if user.rank == 1 %}
+                <a href="/admin/edit-post/{{ post.id }}" class="px-4 py-2 bg-yellow-500 hover:bg-yellow-400 transition rounded-lg shadow">Edit</a>
+                <a href="/admin/delete-post/{{ post.id }}" class="px-4 py-2 bg-red-500 hover:bg-red-400 transition rounded-lg shadow">Delete</a>
+                {% endif %}
+                {% if post.replies %}
+                <button onclick="document.getElementById('replies-{{ post.id }}').classList.toggle('hidden')" 
+                        class="text-blue-400 hover:underline">View Replies</button>
+                {% endif %}
+            </div>
+            
+            <!-- Replies Section -->
+            {% if post.replies %}
+            <div id="replies-{{ post.id }}" class="hidden mt-4 space-y-4 border-t border-gray-700 pt-4">
+                {% for reply in post.replies %}
+                <div class="flex items-start space-x-3">
+                    <img src="{% url 'profile_picture' reply.author_id %}" alt="User" class="w-8 h-8 rounded-full border border-indigo-400">
+                    <div>
+                        <h3 class="font-semibold text-sm">{{ reply.author_name }} {% if reply.is_premium_user %}<span class="px-2 py-1 bg-yellow-500 text-black rounded-md text-xs font-bold">Premium</span>{% endif %}</h3>
+                        <p class="text-xs text-gray-400">{{ reply.reply_date }}</p>
+                        <p class="text-gray-300">{{ reply.reply_content }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

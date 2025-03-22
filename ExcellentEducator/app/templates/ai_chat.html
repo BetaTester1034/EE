@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}AI Chat{% endblock %}
+
+{% block content %}
+<div class="container mx-auto py-10">
+    <h1 class="text-3xl font-semibold text-center mb-6">AI Chat</h1>
+    
+    <div id="chat-container" class="w-full h-96 border border-gray-300 p-4 rounded-lg overflow-y-auto mb-4 bg-white">
+        <!-- Chat messages will be inserted here -->
+    </div>
+    
+    <div class="flex items-center space-x-4">
+        <input type="text" name="user-input" id="user-input" 
+    class="w-full mt-1 px-4 py-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 
+           border border-gray-600 focus:ring-2 focus:ring-blue-500 
+           focus:border-blue-500 focus:outline-none transition duration-200"
+    placeholder="Ask something..." required>
+        <button onclick="sendMessage()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Send</button>
+    </div>
+</div>
+
+<!-- Hidden CSRF Token -->
+<form method="post">
+    {% csrf_token %}
+</form>
+
+<script>
+    // Function to get CSRF token from cookies
+    function getCSRFToken() {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith('csrftoken=')) {
+                    cookieValue = cookie.substring(10);
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function sendMessage() {
+        const userInput = document.getElementById('user-input').value;
+
+        console.log(userInput)
+        
+        if (userInput.trim() === "") return; // Don't send empty prompts
+        
+        // Append user message to the chat
+        const chatContainer = document.getElementById('chat-container');
+        chatContainer.innerHTML += `<div class="message user text-blue-500 font-semibold my-2">You: ${userInput}</div>`;
+        
+        // Clear the input field
+        document.getElementById('user-input').value = "";
+
+        // Send POST request to Django route with CSRF token
+        fetch('/get_ai_response', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()  // Include CSRF token in request headers
+            },
+            body: JSON.stringify({ prompt: userInput })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.response) {
+                console.log(data.response)
+                chatContainer.innerHTML += `<div class="message ai text-green-500 font-semibold my-2">AI: ${data.response}</div>`;
+            } else {
+                chatContainer.innerHTML += `<div class="message ai text-red-500 font-semibold my-2">AI Error: ${data.error}</div>`;
+            }
+
+            // Scroll to the bottom of the chat container
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            chatContainer.innerHTML += `<div class="message ai text-red-500 font-semibold my-2">Something went wrong, please try again!</div>`;
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,297 @@
+{% extends 'base.html' %}
+{% block title %}Manage User - Moderator View{% endblock %}
+{% block content %}
+<div class="flex min-h-screen bg-gray-100">
+
+    <!-- Sidebar -->
+    <div class="w-64 bg-white shadow-lg rounded-r-2xl p-6 space-y-8">
+        <h2 class="text-3xl font-semibold text-gray-700 text-center">User Dashboard</h2>
+        <ul class="space-y-4">
+            <li>
+                <a href="#user-info" class="block py-3 px-5 text-lg font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-200 rounded-lg transition">User Info</a>
+            </li>
+            <li>
+                <a href="#billing-info" class="block py-3 px-5 text-lg font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-200 rounded-lg transition">Billing</a>
+            </li>
+            <li>
+                <a href="#purchase-history" class="block py-3 px-5 text-lg font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-200 rounded-lg transition">Purchase History</a>
+            </li>
+            <li>
+                <a href="#subscriptions" class="block py-3 px-5 text-lg font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-200 rounded-lg transition">Subscriptions</a>
+            </li>
+            <li>
+                <a href="#network" class="block py-3 px-5 text-lg font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-200 rounded-lg transition">Network</a>
+            </li>
+            <li>
+                <a href="#moderation" class="block py-3 px-5 text-lg font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-200 rounded-lg transition">Moderation Actions</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-8 space-y-6">
+        <!-- User Info Section -->
+        <section id="user-info" class="hidden bg-white shadow-2xl p-8 rounded-2xl border border-gray-300 max-w-3xl mx-auto">
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-6 flex items-center gap-3">
+                <svg class="w-8 h-8 text-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path fill-rule="evenodd" d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 12.5a1.5 1.5 0 110-3 1.5 1.5 0 010 3zM7 10a1 1 0 011-1h8a1 1 0 110 2H8a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                </svg>
+                User Information
+            </h2>
+        
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-800">
+                <div>
+                    <p class="text-gray-500 font-medium">Full Name</p>
+                    <p class="text-lg font-semibold">{{ user.full_name }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 font-medium">Guardian Email</p>
+                    <p class="text-lg font-semibold">{{ user.guardian_email }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 font-medium">Guardian Phone</p>
+                    <p class="text-lg font-semibold">{{ user.guardian_phone_no }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 font-medium">Date of Birth</p>
+                    <p class="text-lg font-semibold">{{ user.date_of_birth }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 font-medium">Address</p>
+                    <p class="text-lg font-semibold">{{ user.address }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 font-medium">Country of Residence</p>
+                    <p class="text-lg font-semibold">{{ user.country_of_res }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 font-medium">City</p>
+                    <p class="text-lg font-semibold">{{ user.city }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 font-medium">Nationality</p>
+                    <p class="text-lg font-semibold">{{ user.nationality }}</p>
+                </div>
+            </div>
+        
+            <a href="/admin/edit_user/{{ user_id }}"><button class="mt-8 w-full md:w-auto px-6 py-3 bg-gradient-to-r from-green-600 to-green-500 text-white font-bold rounded-lg shadow-lg hover:from-green-700 hover:to-green-600 transition-all duration-300 flex items-center gap-2 justify-center">
+                <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Edit Info
+            </button></a>
+        </section>
+
+        <!-- Billing Section -->
+        <section id="billing-info" class="hidden bg-white shadow-2xl p-8 rounded-2xl border border-gray-300 max-w-3xl mx-auto">
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-6 flex items-center gap-3">
+                <svg class="w-8 h-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path fill-rule="evenodd" d="M3 6c0-1.1.9-2 2-2h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V6zm3 4a1 1 0 100 2h12a1 1 0 100-2H6zm0 4a1 1 0 100 2h7a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                </svg>
+                Billing Information
+            </h2>
+        
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-800">
+                {% if has_billing_info %}
+                <div>
+                    <p class="text-gray-500 font-medium">Payment Method</p>
+                    <p class="text-lg font-semibold">{{ billing_info.card_brand }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 font-medium">Cardholder Name</p>
+                    <p class="text-lg font-semibold">{{ billing_info.name }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 font-medium">Card Number</p>
+                    <p class="text-lg font-semibold tracking-wide">**** **** **** {{ billing_info.card_last_4_digits }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 font-medium">Expiration Date</p>
+                    <p class="text-lg font-semibold">{{ billing_info.expiration_date }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 font-medium">Country</p>
+                    <p class="text-lg font-semibold">{{ billing_info.country }}</p>
+                </div>
+            </div>
+            {% else %}
+            <div class="text-center">
+                <p class="text-gray-500 text-lg">No billing information found.</p>
+            </div>
+            {% endif %}
+        </section>
+
+        <!-- Purchase History Section -->
+        <section id="purchase-history" class="hidden bg-white shadow-2xl p-8 rounded-2xl border border-gray-300 max-w-3xl mx-auto">
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-6 flex items-center gap-3">
+                <svg class="w-8 h-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v16a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm4 3a1 1 0 011 1v1h8V8a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 01-1 1h-2a1 1 0-1 0V9H8v1a1 1 0-1 0v2a1 1 0-1 0V9a1 1 0-1 0V8a1 1 0-1 0z" clip-rule="evenodd"/>
+                </svg>
+                Purchase History
+            </h2>
+        
+            <div class="space-y-6">
+                <div class="flex justify-between items-center p-5 bg-gray-100 rounded-xl shadow-sm border border-gray-200">
+                    {% if purchase_history %}
+                    {% for p in purchase_history %}
+                    <div>
+                        <p class="text-lg font-semibold text-black-900">{{ p.item_name }}</p>
+                        <p class="text-gray-500">{{ p.purchase_date }}</p>
+                    </div>
+                    <p class="text-xl font-bold text-green-600">${{ p.item_price }}</p>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="text-center">
+                    <p class="text-gray-500 text-lg">No purchase history found.</p>
+                {% endif %}
+            </div>
+        </section>        
+
+        <!-- Subscriptions Section -->
+        <section id="subscriptions" class="hidden bg-white shadow-lg p-8 rounded-2xl max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                </svg>
+                Subscriptions
+            </h2>
+            <div class="space-y-6">
+                {% if is_prem %}
+                <div class="p-6 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white rounded-2xl shadow-xl border-2 border-yellow-700">
+                    <h3 class="text-xl font-semibold">Premium Plan</h3>
+                    <div class="mt-4 grid grid-cols-2 gap-4 text-sm">
+                        <p><span class="font-medium">Start Date:</span> {{ subp_data.start_date }}</p>
+                        <p><span class="font-medium">Renewal Date:</span> {{ subp_data.end_date }}</p>
+                        <p><span class="font-medium">Status:</span> <span class="uppercase font-bold">{{ subp_data.status }}</span></p>
+                    </div>
+                    <a href="/admin/cancel_subscription/{{ user_id }}?from_page=manage_user" class="block mt-6 text-center py-3 bg-red-600 hover:bg-red-700 rounded-lg font-medium shadow-lg">Cancel Subscription</a>
+                </div>
+                {% else %}
+                <div class="p-6 bg-gray-100 rounded-2xl text-gray-800 shadow-md">
+                    <h3 class="text-xl font-semibold">Standard Plan</h3>
+                </div>
+                {% endif %}
+        
+                {% if all_subscriptions %}
+                <h3 class="text-2xl font-semibold text-gray-800 mt-8">Cancelled Subscriptions</h3>
+                <div class="space-y-4">
+                    {% for sub in all_subscriptions %}
+                    <div class="p-4 bg-gray-100 border-l-4 border-red-500 rounded-lg shadow">
+                        <p><span class="font-medium text-gray-700">Subscription Type:</span> Premium Plan</p>
+                        <p><span class="font-medium text-gray-700">Start Date:</span> {{ sub.start_date }}</p>
+                        <p><span class="font-medium text-gray-700">End Date:</span> {{ sub.end_date }}</p>
+                        <p><span class="font-medium text-gray-700">Status:</span> <span class="text-red-500 font-bold uppercase">{{ sub.status }}</span></p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </section>
+        
+        <!-- Network Section -->
+        <section id="network" class="hidden bg-white shadow-xl p-10 rounded-3xl max-w-3xl mx-auto border border-gray-200">
+            <h2 class="text-3xl font-semibold text-gray-900 mb-8 flex items-center gap-3">
+                <svg class="w-8 h-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path fill-rule="evenodd" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm-1 6v6h2V8h-2Zm0 8v2h2v-2h-2Z" clip-rule="evenodd"/>
+                </svg>
+                <span>Device Login History</span>
+            </h2>
+
+            <div class="space-y-6">
+                <h3 class="text-gray-700 text-lg font-medium">Previously Used Devices</h3>
+
+                {% if logged_ip_addresses %}
+                <div class="space-y-4">
+                    {% for entry in logged_ip_addresses %}
+                    <div class="p-5 bg-gray-50 border-l-4 border-blue-500 rounded-xl shadow-sm transition-all duration-300 hover:shadow-md hover:bg-gray-100 flex justify-between items-center">
+                        <div>
+                            <p class="text-gray-800 text-base"><strong class="text-gray-900">IP Address:</strong> {{ entry.ip_address }}</p>
+                            <p class="text-gray-800 text-base"><strong class="text-gray-900">Logged In On:</strong> {{ entry.timestamp }}</p>
+                            <p class="text-gray-800 text-base"><strong class="text-gray-900">User Agent:</strong> {{ entry.user_agent }}</p>
+                        </div>
+                        <button 
+                            onclick="confirmBlock('{{ entry.ip_address }}')"
+                            class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg shadow-md hover:bg-red-700 focus:ring-4 focus:ring-red-300 transition-all"
+                        >
+                            Block
+                        </button>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center p-6 bg-gray-50 border rounded-xl shadow-sm">
+                    <p class="text-gray-600 text-lg">No login records found.</p>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- Moderation Section -->
+        <section id="moderation" class="hidden bg-white shadow-2xl p-8 rounded-2xl border border-gray-300 max-w-3xl mx-auto">
+            <h2 class="text-3xl font-extrabold text-gray-900 mb-6 flex items-center gap-3">
+                <svg class="w-8 h-8 text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path fill-rule="evenodd" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2ZM11 6h2v6h-2V6Zm0 8h2v2h-2v-2Z" clip-rule="evenodd"/>
+                </svg>
+                Account Moderation
+            </h2>
+        
+            <div class="grid grid-cols-2 gap-4 sm:grid-cols-3">
+                <a href="/admin/convert_to_premium/{{ user_id }}?from_page=manage_user">
+                    <button class="w-full px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition">
+                        Upgrade to Premium
+                    </button>
+                </a>
+                <a href="/admin/delete_user/{{ user_id }}">
+                    <button class="w-full col-span-2 sm:col-span-1 px-6 py-3 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 transition">
+                        Delete Account
+                    </button>
+                 </a>
+            </div>
+        
+            <!-- Password Update Form -->
+            <div class="mt-8 p-6 bg-gray-50 border border-gray-200 rounded-xl shadow-sm">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Update Password</h3>
+                <form method="POST" action="#">
+                    {% csrf_token %}
+                    <input type="hidden" name="formType" id="formType" value="resetPassword"></input>
+                    <div class="space-y-5">
+                        <div>
+                            <label for="new-password" class="block text-sm font-medium text-gray-600">New Password</label>
+                            <input type="password" id="new-password" name="new_password" class="w-full px-4 py-2 border rounded-lg shadow-sm text-gray-800 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none border-gray-300" required>
+                        </div>
+                        <div>
+                            <label for="confirm-password" class="block text-sm font-medium text-gray-600">Confirm Password</label>
+                            <input type="password" id="confirm-password" name="confirm_password" class="w-full px-4 py-2 border rounded-lg shadow-sm text-gray-800 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none border-gray-300" required>
+                        </div>
+                        <button type="submit" class="w-full mt-4 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition">
+                            Update Password
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>        
+    </div>
+</div>
+
+<style>
+    p {
+        color: black;
+    }
+</style>
+
+<script>
+    // Function to show the selected section and hide the others
+    document.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", (event) => {
+            // Hide all sections
+            document.querySelectorAll("section").forEach((section) => {
+                section.classList.add("hidden");
+            });
+            // Show the clicked section
+            const targetSection = document.querySelector(event.target.getAttribute("href"));
+            targetSection.classList.remove("hidden");
+        });
+    });
+</script>
+{% endblock %}

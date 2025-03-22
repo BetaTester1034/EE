@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Bought Resources{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-6 py-12">
+    <h1 class="text-4xl font-extrabold text-gray-800 dark:text-white text-center mb-10">
+        Your Purchased Resources
+    </h1>
+
+    <div class="mb-10">
+        {% if all_resources %}
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                {% for resource in all_resources %}
+                    <div class="relative bg-white dark:bg-gray-900 backdrop-blur-lg shadow-lg rounded-xl p-6 overflow-hidden transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+                        <div class="absolute inset-0 bg-gradient-to-br from-green-500 to-teal-600 opacity-10"></div>
+                        
+                        <div class="z-10 relative">
+                            <h3 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-3">
+                                {{ resource.product_name}}
+                            </h3>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">
+                                {{ resource.product_description }}
+                            </p>
+                            <p class="text-gray-500 dark:text-gray-300 text-xs font-medium mb-4">
+                                Category: <span class="font-semibold text-gray-700 dark:text-gray-200">{{ resource.product_category }}</span>
+                            </p>
+
+                            <a href="{{ resource.view_link }}"
+                               class="inline-flex items-center justify-center px-6 py-3 bg-green-600 text-white font-medium rounded-lg shadow-md hover:bg-green-700 transition-all duration-300 transform hover:scale-105">
+                                View Resource
+                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                                </svg>
+                            </a>
+                        </div>
+
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black to-transparent opacity-60"></div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="flex flex-col items-center justify-center h-80 text-center">
+                <p class="text-gray-500 dark:text-gray-400 text-lg">You haven't bought any resources yet.</p>
+                <a href="/shop" class="mt-6 inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 transition-all duration-300 transform hover:scale-105">
+                    Browse Resources
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                    </svg>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

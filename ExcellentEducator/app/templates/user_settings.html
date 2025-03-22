@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}User Settings{% endblock %}
+{% block content %}
+<div class="max-w-xl mx-auto p-6 bg-white shadow-lg rounded-2xl mt-10">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Profile Settings</h2>
+    <div class="flex flex-col items-center gap-4">
+        <!-- Display Current Profile Picture -->
+        <div class="relative w-32 h-32">
+            <img id="profile-pic" src="/profile-picture/{{ user_id }}/" alt="Profile Picture"
+                class="w-full h-full object-cover rounded-full border-4 border-gray-200 shadow-md">
+        </div>
+        
+        <!-- Upload Form -->
+        <form action="#" method="POST" enctype="multipart/form-data" class="w-full">
+            {% csrf_token %}
+            <label class="block text-sm font-medium text-gray-700 mb-1">Upload New Picture</label>
+            <input type="file" id="fileInput" name="profile_picture"
+                class="block w-full text-sm text-gray-700 border border-gray-300 rounded-lg cursor-pointer p-2 focus:ring focus:ring-blue-300" accept="image/*">
+            <button type="submit" class="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('fileInput').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profile-pic').src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+{% endblock %}

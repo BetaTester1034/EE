@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-900 text-white p-10">
+    <div class="container mx-auto">
+
+        <!-- Search Bar -->
+        <div class="mb-6 max-w-3xl mx-auto">
+            <input type="text" id="searchInput" onkeyup="filterUsers()" placeholder="Search by name..."
+                   class="w-full px-6 py-3 rounded-lg bg-gray-800 text-white placeholder-gray-500 border border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none transition">
+        </div>
+
+        <!-- Users Table -->
+        <div class="overflow-x-auto bg-gray-800 rounded-xl shadow-lg">
+            <table class="w-full text-gray-200">
+                <thead class="bg-gray-700 text-left text-sm">
+                    <tr class="border-b border-gray-600">
+                        <th class="px-4 py-3">Name</th>
+                        <th class="px-4 py-3">Grade</th>
+                        <th class="px-4 py-3">Account</th>
+                        <th class="px-4 py-3">Guardian</th>
+                        <th class="px-4 py-3">Rank</th>
+                        <th class="px-4 py-3">Created</th>
+                        <th class="px-4 py-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in users %}
+                    <tr class="border-b border-gray-700 hover:bg-gray-700">
+                        <td class="px-4 py-3">{{ student.full_name }}</td>
+                        <td class="px-4 py-3 text-gray-400">Grade {{ student.grade }}</td>
+                        <td class="px-4 py-3">
+                            {% if student.account_type == 'Premium' %}
+                            <span class="px-2 py-1 bg-yellow-500 text-black rounded-md text-xs font-bold">Premium</span>
+                            {% else %}
+                            <span class="px-2 py-1 bg-blue-500 text-white rounded-md text-xs font-bold">Regular</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-4 py-3">
+                            <a href="mailto:{{ student.guardian_email }}" class="text-blue-400 hover:underline">{{ student.guardian_email }}</a><br>
+                            <a href="tel:{{ student.guardian_phone_no }}" class="text-blue-400 hover:underline">{{ student.guardian_phone_no }}</a>
+                        </td>
+                        <td class="px-4 py-3">
+                            <span class="{% if student.rank == 1 %}text-green-400{% else %}text-yellow-400{% endif %}">
+                                {% if student.rank == 1 %}Teacher{% else %}Student{% endif %}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3 text-gray-400">{{ student.creation_date }}</td>
+                        <td class="px-4 py-3">
+                            <div class="relative inline-block">
+                                <button onclick="toggleDropdown(this)" class="px-3 py-2 bg-gray-700 text-white rounded-md focus:outline-none">
+                                    ⋮
+                                </button>
+                                <div class="absolute right-0 mt-2 w-40 bg-gray-800 rounded-md shadow-lg hidden">
+                                    <form method="GET" action="/admin/manage-user/{{ student.id }}">
+                                        <input type="submit" value="Manage" class="w-full text-left px-4 py-2 hover:bg-gray-700"></input>
+                                    </form>
+                                    <form method="GET" action="/admin/delete_user/{{ student.id }}?from_page=dashboard">
+                                        <input type="submit" value="Delete" class="w-full text-left px-4 py-2 text-red-400 hover:bg-gray-700"></input>
+                                    </form>
+                                    {% if student.account_type == 'Premium' %}
+                                    <form method="GET" action="/admin/cancel_subscription/{{ student.id }}">
+                                        <input type="submit" value="Cancel Subscription" class="w-full text-left px-4 py-2 text-yellow-400 hover:bg-gray-700"></input>
+                                    </form>
+                                    {% else %}
+                                    <form method="GET" action="/admin/convert_to_premium/{{ student.id }}">
+                                        <input type="submit" value="Upgrade to Premium" class="w-full text-left px-4 py-2 text-green-400 hover:bg-gray-700"></input>
+                                    </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center px-6 py-4 text-gray-400">No users found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="min-h-screen bg-gray-900 text-white p-10">
+            <div class="container mx-auto">
+        
+                <!-- Admin Product Management -->
+                <div class="mb-10">
+                    <h2 class="text-2xl font-semibold text-white mb-6">Manage Products</h2>
+        
+                    <!-- Products List -->
+                    <div class="overflow-x-auto bg-gray-800 rounded-xl shadow-lg">
+                        <h3 class="text-xl font-semibold text-white mb-6">Existing Products</h3>
+                        <table class="w-full text-gray-200">
+                            <thead class="bg-gray-700 text-left text-sm">
+                                <tr class="border-b border-gray-600">
+                                    <th class="px-4 py-3">Product Name</th>
+                                    <th class="px-4 py-3">Price</th>
+                                    <th class="px-4 py-3">Category</th>
+                                    <th class="px-4 py-3">Description</th>
+                                    <th class="px-4 py-3">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for pd in all_products %}
+                                <tr class="border-b border-gray-700 hover:bg-gray-700">
+                                    <td class="px-4 py-3">{{ pd.item_name }}</td>
+                                    <td class="px-4 py-3">${{ pd.item_price }}</td>
+                                    <td class="px-4 py-3">{{ pd.item_category }}</td>
+                                    <td class="px-4 py-3">{{ pd.item_description }}</td>
+                                    <td class="px-4 py-3">
+                                        <div class="relative inline-block">
+                                            <button onclick="toggleDropdown(this)" class="px-3 py-2 bg-gray-700 text-white rounded-md focus:outline-none">
+                                                ⋮
+                                            </button>
+                                            <div class="absolute right-0 mt-2 w-40 bg-gray-800 rounded-md shadow-lg hidden">
+                                                <form method="GET" action="/admin/edit_product/{{ pd.id }}">
+                                                    <input type="submit" value="Edit" class="w-full text-left px-4 py-2 hover:bg-gray-700"></input>
+                                                </form>
+                                                <form method="GET" action="/admin/delete-product/{{ pd.id }}?from_page=dashboard">
+                                                    <input type="submit" value="Delete" class="w-full text-left px-4 py-2 text-red-400 hover:bg-gray-700"></input>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+        <!-- Block IP Section -->
+        <div class="mt-10 bg-gray-800 p-8 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-semibold text-white mb-6">Block IP Address</h2>
+            <form method="POST" action="#" class="space-y-6">
+                {% csrf_token %}
+                <div>
+                    <label for="ip_address" class="block text-white text-sm font-semibold">IP Address</label>
+                    <input type="text" id="ip_address" name="ip_address" class="w-full px-6 py-3 rounded-lg bg-gray-700 text-white placeholder-gray-500 border border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none transition"
+                           placeholder="Enter IP Address" required>
+                </div>
+                <div class="flex justify-end">
+                    <input type="hidden" name="formType" value="blockIP"></input>
+                    <input type="submit" value="Block IP" class="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"></input>
+                </div>
+            </form>
+        </div>
+
+        <!-- Blocked IPs List -->
+        <div class="mt-10 bg-gray-800 p-8 rounded-xl shadow-lg">
+            <h2 class="text-2xl font-semibold text-white mb-6">Blocked IPs</h2>
+            <table class="w-full text-gray-200">
+                <thead class="bg-gray-700 text-left text-sm">
+                    <tr class="border-b border-gray-600">
+                        <th class="px-4 py-3">IP Address</th>
+                        <th class="px-4 py-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ip in blocked_ips %}
+                    <tr class="border-b border-gray-700 hover:bg-gray-700">
+                        <td class="px-4 py-3">{{ ip.address }}</td>
+                        <td class="px-4 py-3">
+                            <form method="POST" action="#" class="inline-block">
+                                {% csrf_token %}
+                                <input type="hidden" name="formType" value="unblockIP">
+                                <input type="hidden" name="ip_address" value="{{ ip.address }}">
+                                <input type="submit" value="Unblock" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="mt-10 grid grid-cols-2 gap-6 bg-gray-800 p-8 rounded-xl shadow-lg">
+            <div class="text-center">
+                <h2 class="text-xl font-semibold text-white mb-2">Total Students</h2>
+                <div class="text-4xl text-yellow-400 font-bold">{{ users|length }}</div>
+            </div>
+            <div class="text-center">
+                <h2 class="text-xl font-semibold text-white mb-2">Total Sales</h2>
+                <div class="text-4xl text-green-400 font-bold">${{ total_sales }}</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+    function filterUsers() {
+        const input = document.getElementById('searchInput').value.toLowerCase();
+        document.querySelectorAll('table tbody tr').forEach(row => {
+            const name = row.querySelector('td')?.textContent.toLowerCase();
+            row.style.display = name.includes(input) ? '' : 'none';
+        });
+    }
+
+    function toggleDropdown(button) {
+        const dropdown = button.nextElementSibling;
+        dropdown.classList.toggle('hidden');
+        document.addEventListener('click', function closeDropdown(event) {
+            if (!button.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.add('hidden');
+                document.removeEventListener('click', closeDropdown);
+            }
+        });
+    }
+</script>
+
+{% endblock %}

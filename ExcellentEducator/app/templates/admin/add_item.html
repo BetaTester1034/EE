@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Item{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto mt-8 p-6 bg-gray-700 shadow-lg rounded-lg">
+    <h2 class="text-2xl font-semibold text-center text-white mb-4">Add New Item</h2>
+
+    <form method="POST" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+        
+        <div>
+            <label for="item_name" class="block text-sm font-medium text-white">Item Name</label>
+            <input type="text" name="item_name" id="item_name" class="w-full mt-1 px-4 py-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition duration-200" required>
+        </div>
+
+        <div>
+            <label for="item_price" class="block text-sm font-medium text-white">Item Price (USD)</label>
+            <input type="text" name="item_price" id="item_price" class="w-full mt-1 px-4 py-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition duration-200" required>
+        </div>
+
+        <div>
+            <label for="item_description" class="block text-sm font-medium text-white">Item Description</label>
+            <textarea name="item_description" id="item_description" rows="4" class="w-full mt-1 px-4 py-3 rounded-lg bg-gray-700 text-white placeholder-gray-400 border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition duration-200" required></textarea>
+        </div>
+
+        <!-- Category Selection -->
+        <div>
+            <label for="item_category" class="block text-sm font-medium text-white">Category</label>
+            <select name="item_category" id="item_category" class="w-full mt-1 px-4 py-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition duration-200" required onchange="toggleFileInput()">
+                <option value="">Select Category</option>
+                <option value="pdf">PDF</option>
+                <option value="video">Video</option>
+            </select>
+        </div>
+
+        <!-- File Uploads -->
+        <div id="pdf_upload" style="display: none;">
+            <label for="item_pdf" class="block text-sm font-medium text-white">Upload PDF</label>
+            <input type="file" name="item_pdf" id="item_pdf" accept=".pdf" class="w-full mt-1 px-4 py-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition duration-200">
+        </div>
+
+        <div id="video_upload" style="display: none;">
+            <label for="item_video" class="block text-sm font-medium text-white">Upload Video</label>
+            <input type="file" name="item_video" id="item_video" accept="video/*" class="w-full mt-1 px-4 py-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition duration-200">
+        </div>
+
+        <div>
+            <label for="item_is_premium" class="block text-sm font-medium text-white">
+              Premium Exclusive 
+              <span class="px-2 py-1 bg-yellow-500 text-black rounded-md text-xs font-bold">
+                Premium
+              </span>
+            </label>
+            <input 
+              type="checkbox" 
+              name="item_is_premium" 
+              id="item_is_premium" 
+              class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+        </div>
+
+        <button type="submit" class="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-md shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            Add Item
+        </button>
+    </form>
+</div>
+
+<script>
+    function toggleFileInput() {
+        var category = document.getElementById("item_category").value;
+        document.getElementById("pdf_upload").style.display = (category === "pdf") ? "block" : "none";
+        document.getElementById("video_upload").style.display = (category === "video") ? "block" : "none";
+    }
+</script>
+{% endblock %}

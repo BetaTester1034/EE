@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Plans{% endblock %}
+
+{% block content %}
+<div class="container mx-auto py-16 px-6">
+    <div class="max-w-2xl mx-auto bg-white shadow-2xl rounded-3xl p-10 border border-gray-300 relative">
+        <div class="absolute top-0 right-0 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white text-sm font-semibold px-4 py-1 rounded-bl-lg">GOLD</div>
+        <h2 class="text-4xl font-extrabold text-center text-gray-900">🚀 Premium Membership</h2>
+        <p class="text-lg text-center text-gray-600 mt-3">An exclusive gateway to unparalleled benefits and elite services.</p>
+        
+        <div class="mt-6 flex justify-center items-end">
+            <span class="text-6xl font-black text-gray-900">$100</span>
+            <span class="text-gray-600 text-lg ml-2">/ year</span>
+        </div>
+        
+        <hr class="my-6 border-gray-300">
+
+        <ul class="mt-6 space-y-4 text-lg text-gray-700">
+            <li class="flex items-center"><span class="mr-3 text-green-500 text-2xl">✔️</span> Free full access to notes, past papers & videos</li>
+            <li class="flex items-center"><span class="mr-3 text-green-500 text-2xl">✔️</span> Gold premium tag next to your name</li>
+            <li class="flex items-center"><span class="mr-3 text-green-500 text-2xl">✔️</span> Access to exclusive-only premium products</li>
+        </ul>
+        
+        <div class="mt-10">
+            <form id="subscribeForm" method="POST" action="#">
+                {% csrf_token %}
+                <input type="submit" value="Subscribe Now" class="w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white py-3 px-6 rounded-lg text-xl font-semibold shadow-md hover:scale-105 transition-transform">
+            </input>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
